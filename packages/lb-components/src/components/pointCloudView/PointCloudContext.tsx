@@ -464,8 +464,30 @@ export const PointCloudProvider: React.FC<PropsWithChildren<{}>> = ({ children }
     );
   }, [rectList]);
 
+  const selectedPointCloudBox = useMemo(() => {
+    return pointCloudBoxList.find((v) => v.id === selectedID);
+  }, [pointCloudBoxList, selectedID]);
+
+  const displayPointCloudList = useMemo(() => {
+    return pointCloudBoxList.filter(
+      (i) => !hideAttributes.includes(i.attribute),
+    )
+  }, [pointCloudBoxList, hideAttributes]);
+
+  const displaySphereList = useMemo(() => {
+    return pointCloudSphereList.filter(
+      (i) => !hideAttributes.includes(i.attribute),
+    )
+  }, [pointCloudSphereList, hideAttributes]);
+
+
+  const displayLineList = useMemo(() => {
+    return lineList.filter(
+      (i) => i.attribute && !hideAttributes.includes(i.attribute),
+    );
+  }, [lineList, hideAttributes]);
+
   const ptCtx = useMemo(() => {
-    const selectedPointCloudBox = pointCloudBoxList.find((v) => v.id === selectedID);
 
     const addPointCloudBox = (box: IPointCloudBox) => {
       const newPointCloudList = pointCloudBoxList.concat(box);
@@ -555,17 +577,7 @@ export const PointCloudProvider: React.FC<PropsWithChildren<{}>> = ({ children }
       setSelectedIDs(pointCloudBoxList.filter((i) => i.attribute === attr).map((i) => i.id));
     };
 
-    const displayPointCloudList = pointCloudBoxList.filter(
-      (i) => !hideAttributes.includes(i.attribute),
-    );
 
-    const displaySphereList = pointCloudSphereList.filter(
-      (i) => !hideAttributes.includes(i.attribute),
-    );
-
-    const displayLineList = lineList.filter(
-      (i) => i.attribute && !hideAttributes.includes(i.attribute),
-    );
 
     const toggleAttributesVisible = (tAttribute: string) => {
       if (hideAttributes.includes(tAttribute)) {
@@ -774,18 +786,22 @@ export const PointCloudProvider: React.FC<PropsWithChildren<{}>> = ({ children }
     };
   }, [
     valid,
-    selectedIDs,
-    pointCloudBoxList,
-    pointCloudSphereList,
+    selectedPointCloudBox,
+    displayPointCloudList,
+    displaySphereList,
+    displayLineList,
+    // selectedIDs,
+    // pointCloudBoxList,
+    // pointCloudSphereList,
     polygonList,
-    lineList,
+    // lineList,
     rectList,
     topViewInstance,
     sideViewInstance,
     backViewInstance,
     mainViewInstance,
     zoom,
-    hideAttributes,
+    // hideAttributes,
     attrPanelLayout,
     defaultAttribute,
     pointCloudPattern,
